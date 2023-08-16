@@ -86,6 +86,8 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
             }
         });
 
+        jcbRubro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione el Rubro" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -164,16 +166,20 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
     private void jbNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNuevoActionPerformed
         // TODO add your handling code here:
         
-    jtCodigo.setText(""); // Limpia los campos
-    jtDescripcion.setText("");
-    jtPrecio.setText("");
-    jtStock.setText("");
-    jcbRubro.setSelectedIndex(0);
+ limpiarPlanilla();
     }//GEN-LAST:event_jbNuevoActionPerformed
 
     private void jbGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGuardarActionPerformed
         // TODO add your handling code here:
-        
+         try{
+         if (jtDescripcion.getText().isEmpty()||jtPrecio.getText().isEmpty()||jtStock.getText().isEmpty()){
+             JOptionPane.showMessageDialog(this, "Ningun campo debe estar vacio"); 
+             return;
+         }
+        if (jcbRubro.getSelectedItem().toString().equals("Seleccione el Rubro")) {
+              JOptionPane.showMessageDialog(this, "Debe seleccionar el Rubro"); 
+             return;
+         }
     int codigo = Integer.parseInt(jtCodigo.getText());
     String descripcion = jtDescripcion.getText();
     double precio = Double.parseDouble(jtPrecio.getText());
@@ -183,16 +189,27 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
     Producto nuevoProducto = new Producto(codigo, descripcion, precio, stock, categoria);
 
     setProductos.add(nuevoProducto);
+    JOptionPane.showMessageDialog(this, "Articulo Guardado Correctamente");
+     limpiarPlanilla();
+    }catch (NumberFormatException e){
+           JOptionPane.showMessageDialog(this, "DATOS INCORRECTOS");
+    }
+   
+    
+    
     }//GEN-LAST:event_jbGuardarActionPerformed
 
     private void jbEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEliminarActionPerformed
         // TODO add your handling code here:
         
-        int codigo = Integer.parseInt(jtCodigo.getText());
+     // Obtener el código y la categoría seleccionada
+    int codigo = Integer.parseInt(jtCodigo.getText());
+    Categoria categoriaSeleccionada = (Categoria) jcbRubro.getSelectedItem();
 
-    // Crear un objeto Producto con el código para eliminarlo del TreeSet
-    Producto productoAEliminar = new Producto(codigo, "", 0, 0, Categoria.COMESTIBLE);
+    // Crear un objeto Producto con el código y la categoría seleccionada
+    Producto productoAEliminar = new Producto(codigo, "", 0, 0, categoriaSeleccionada);
 
+    // Eliminar el producto del TreeSet
     setProductos.remove(productoAEliminar);
     }//GEN-LAST:event_jbEliminarActionPerformed
 
@@ -208,8 +225,19 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
         jtPrecio.setText(Double.toString(productoEncontrado.getPrecio()));
         jtStock.setText(Integer.toString(productoEncontrado.getStock()));
         jcbRubro.setSelectedItem(productoEncontrado.getRubro());
+     
+// Aquí se busca el índice del rubro en el combo
+        int index = jcbRubro.getItemCount() - 1; // Inicializar con el último índice (no válido)
+        for (int i = 0; i < jcbRubro.getItemCount(); i++) {
+            if (jcbRubro.getItemAt(i).equals(productoEncontrado.getRubro().toString())) {
+                index = i;
+                break;
+            }
+        }
+        
+        // Se establece el índice encontrado en el combo
+        jcbRubro.setSelectedIndex(index);
     } else {
-        // Producto no encontrado, puedes mostrar un mensaje o realizar otra acción
         JOptionPane.showMessageDialog(this, "Producto no encontrado");
     }
     }//GEN-LAST:event_jbBuscarporCodigoActionPerformed
@@ -252,6 +280,13 @@ private Producto buscarProductoPorCodigo(int codigoBuscado) {
     return null; // Si no se encuentra el producto con el código buscado
 }
 
+private void limpiarPlanilla(){
+   jtCodigo.setText(""); // Limpia los campos
+    jtDescripcion.setText("");
+    jtPrecio.setText("");
+    jtStock.setText("");
+    jcbRubro.setSelectedIndex(0);
+}
 
     
 
