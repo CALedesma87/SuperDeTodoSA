@@ -78,6 +78,11 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
         });
 
         jbSalir.setText("Salir");
+        jbSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSalirActionPerformed(evt);
+            }
+        });
 
         jbBuscarporCodigo.setText("Buscar");
         jbBuscarporCodigo.addActionListener(new java.awt.event.ActionListener() {
@@ -189,7 +194,7 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
     Producto nuevoProducto = new Producto(codigo, descripcion, precio, stock, categoria);
 
     setProductos.add(nuevoProducto);
-    JOptionPane.showMessageDialog(this, "Articulo Guardado Correctamente");
+    JOptionPane.showMessageDialog(this, "Producto Guardado Correctamente");
      limpiarPlanilla();
     }catch (NumberFormatException e){
            JOptionPane.showMessageDialog(this, "DATOS INCORRECTOS");
@@ -201,16 +206,28 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
 
     private void jbEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEliminarActionPerformed
         // TODO add your handling code here:
-        
-     // Obtener el código y la categoría seleccionada
-    int codigo = Integer.parseInt(jtCodigo.getText());
-    Categoria categoriaSeleccionada = (Categoria) jcbRubro.getSelectedItem();
 
-    // Crear un objeto Producto con el código y la categoría seleccionada
-    Producto productoAEliminar = new Producto(codigo, "", 0, 0, categoriaSeleccionada);
+         try {
+        int codigo = Integer.parseInt(jtCodigo.getText());
 
-    // Eliminar el producto del TreeSet
-    setProductos.remove(productoAEliminar);
+        // Buscar el producto en el TreeSet
+        Producto productoAEliminar = buscarProductoPorCodigo(codigo);
+
+        if (productoAEliminar != null) {
+            // Eliminar el producto del TreeSet
+            setProductos.remove(productoAEliminar);
+            JOptionPane.showMessageDialog(this, "Producto Eliminado");
+            limpiarPlanilla();
+
+            // Aquí puedes actualizar la interfaz gráfica si es necesario
+            // Por ejemplo, limpiar campos de texto, actualizar el ComboBox, etc.
+        } else {
+            JOptionPane.showMessageDialog(this, "Producto no encontrado");
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "NO hay ningun producto selecionado");
+    }
+
     }//GEN-LAST:event_jbEliminarActionPerformed
 
     private void jbBuscarporCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarporCodigoActionPerformed
@@ -241,6 +258,12 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
         JOptionPane.showMessageDialog(this, "Producto no encontrado");
     }
     }//GEN-LAST:event_jbBuscarporCodigoActionPerformed
+
+    private void jbSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSalirActionPerformed
+        // TODO add your handling code here:
+        
+     setVisible(false);   
+    }//GEN-LAST:event_jbSalirActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
