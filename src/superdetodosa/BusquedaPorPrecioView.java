@@ -1,6 +1,7 @@
 
 package superdetodosa;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -43,7 +44,24 @@ DefaultTableModel modelo = new DefaultTableModel(){
 
         jLabel2.setText("Entre $:");
 
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
+
         jLabel3.setText("y");
+
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField2KeyReleased(evt);
+            }
+        });
 
         jtProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -100,6 +118,24 @@ DefaultTableModel modelo = new DefaultTableModel(){
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        // TODO add your handling code here:
+        
+        borrarFilas();
+        entrePrecios();
+    }//GEN-LAST:event_jTextField1KeyReleased
+
+    private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
+        // TODO add your handling code here:
+        
+         borrarFilas();
+        entrePrecios();
+    }//GEN-LAST:event_jTextField2KeyReleased
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -128,4 +164,32 @@ DefaultTableModel modelo = new DefaultTableModel(){
         modelo.removeRow(f);
         }
     }
+   
+   private void entrePrecios(){
+    try{
+        double num1=0,num2=0;
+    if(!jTextField1.getText().isEmpty())
+    num1=Double.parseDouble(jTextField1.getText());
+    if(!jTextField2.getText().isEmpty())
+    num2=Double.parseDouble(jTextField2.getText());
+    if(!jTextField1.getText().isEmpty() && !jTextField2.getText().isEmpty()){
+    for(Producto prod :MenuPrincipal.listaProductos){
+        if(num1<=prod.getPrecio() && num2>=prod.getPrecio())
+            modelo.addRow(new Object[]{
+            prod.getCodigo(),
+            prod.getDescripcion(),
+            prod.getPrecio(),
+            prod.getStock()
+            });
+        }//fin for   
+    }//fin if
+    }//fin try
+    catch(NumberFormatException ex)
+    {
+        JOptionPane.showMessageDialog(this, "ERROR los valores ingresados deben ser de tipo numerico");
+        jTextField1.setText("");
+        jTextField2.setText("");
+    }//fin catch
+}//fin metodo
+
 }
