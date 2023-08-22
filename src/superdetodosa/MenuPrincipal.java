@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package superdetodosa;
 
 import java.util.TreeSet;
@@ -10,12 +5,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
-/**
- *
- * @author Usuario
- */
 public class MenuPrincipal extends javax.swing.JFrame {
-    public static TreeSet <Producto> listaProductos = new TreeSet <>();
+
+    public static TreeSet<Producto> listaProductos = new TreeSet<>();
 
     /**
      * Creates new form MenuPrincipal
@@ -124,19 +116,19 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
-        
+
         escritorio.removeAll();
         escritorio.repaint();
         BusquedaPorNombreView bpn = new BusquedaPorNombreView();
         bpn.setVisible(true);
         escritorio.add(bpn);
         escritorio.moveToFront(bpn);
-        
+
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        
+
         escritorio.removeAll();
         escritorio.repaint();
         GestionDeProductoView gdp = new GestionDeProductoView();
@@ -212,9 +204,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     // End of variables declaration//GEN-END:variables
 
-private void agregarProductos(){
-    
-    
+   public static void agregarProducto(Producto producto) {
+        listaProductos.add(producto);
+    }
 
-}
+    public static void eliminarProducto(Producto producto) {
+        listaProductos.remove(producto);
+    }
+
+    public static TreeSet<Producto> getListaProductos() {
+        return listaProductos;
+    }
 }

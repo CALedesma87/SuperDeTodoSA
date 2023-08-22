@@ -1,16 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package superdetodosa;
 
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Usuario
- */
+
 public class BusquedaPorNombreView extends javax.swing.JInternalFrame {
     DefaultTableModel modelo = new DefaultTableModel(){
         
@@ -106,18 +99,22 @@ public class BusquedaPorNombreView extends javax.swing.JInternalFrame {
 
     private void jtNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtNombreKeyReleased
         // TODO add your handling code here:
+        String textoBusqueda = jtNombre.getText();
+    if (!textoBusqueda.isEmpty()) {
         borrarFilas();
-        for(Producto prod: MenuPrincipal.listaProductos){
-            
-            if(prod.getDescripcion().startsWith(jtNombre.getText())){
-                
+        for (Producto prod : MenuPrincipal.listaProductos) {
+            if (prod.getDescripcion().startsWith(textoBusqueda)) {
                 modelo.addRow(new Object[]{
                     prod.getCodigo(),
                     prod.getDescripcion(),
                     prod.getPrecio(),
-                    prod.getStock() } );
+                    prod.getStock()
+                });
             }
         }
+    } else {
+        borrarFilas(); // Si el campo está vacío, borramos todas las filas de la tabla
+    }
     }//GEN-LAST:event_jtNombreKeyReleased
 
 

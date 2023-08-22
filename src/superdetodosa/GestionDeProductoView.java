@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 
 public class GestionDeProductoView extends javax.swing.JInternalFrame {
-private TreeSet<Producto> setProductos = new TreeSet<>();
+private TreeSet<Producto> setProductos = MenuPrincipal.getListaProductos();
     /**
      * Creates new form GestionDeProductoView
      */
@@ -176,29 +176,32 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
 
     private void jbGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGuardarActionPerformed
         // TODO add your handling code here:
-         try{
-         if (jtDescripcion.getText().isEmpty()||jtPrecio.getText().isEmpty()||jtStock.getText().isEmpty()){
-             JOptionPane.showMessageDialog(this, "Ningun campo debe estar vacio"); 
-             return;
-         }
-        if (jcbRubro.getSelectedItem().toString().equals("Seleccione el Rubro")) {
-              JOptionPane.showMessageDialog(this, "Debe seleccionar el Rubro"); 
-             return;
-         }
-    int codigo = Integer.parseInt(jtCodigo.getText());
-    String descripcion = jtDescripcion.getText();
-    double precio = Double.parseDouble(jtPrecio.getText());
-    int stock = Integer.parseInt(jtStock.getText());
-    Categoria categoria = Categoria.valueOf(jcbRubro.getSelectedItem().toString());
+       try {
+            if (jtDescripcion.getText().isEmpty() || jtPrecio.getText().isEmpty() || jtStock.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ningún campo debe estar vacío");
+                return;
+            }
+            if (jcbRubro.getSelectedItem().toString().equals("Seleccione el Rubro")) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar el Rubro");
+                return;
+            }
 
-    Producto nuevoProducto = new Producto(codigo, descripcion, precio, stock, categoria);
+            int codigo = Integer.parseInt(jtCodigo.getText());
+            String descripcion = jtDescripcion.getText();
+            double precio = Double.parseDouble(jtPrecio.getText());
+            int stock = Integer.parseInt(jtStock.getText());
+            Categoria categoria = Categoria.valueOf(jcbRubro.getSelectedItem().toString());
 
-    setProductos.add(nuevoProducto);
-    JOptionPane.showMessageDialog(this, "Producto Guardado Correctamente");
-     limpiarPlanilla();
-    }catch (NumberFormatException e){
-           JOptionPane.showMessageDialog(this, "DATOS INCORRECTOS");
-    }
+            Producto nuevoProducto = new Producto(codigo, descripcion, precio, stock, categoria);
+
+            // Agregar el producto a la lista en MenuPrincipal
+            MenuPrincipal.agregarProducto(nuevoProducto);
+
+            JOptionPane.showMessageDialog(this, "Producto Guardado Correctamente");
+            limpiarPlanilla();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "DATOS INCORRECTOS");
+        }
    
     
     
@@ -208,55 +211,54 @@ private TreeSet<Producto> setProductos = new TreeSet<>();
         // TODO add your handling code here:
 
          try {
-        int codigo = Integer.parseInt(jtCodigo.getText());
+            int codigo = Integer.parseInt(jtCodigo.getText());
 
-        // Buscar el producto en el TreeSet
-        Producto productoAEliminar = buscarProductoPorCodigo(codigo);
+            // Buscar el producto en el TreeSet
+            Producto productoAEliminar = buscarProductoPorCodigo(codigo);
 
-        if (productoAEliminar != null) {
-            // Eliminar el producto del TreeSet
-            setProductos.remove(productoAEliminar);
-            JOptionPane.showMessageDialog(this, "Producto Eliminado");
-            limpiarPlanilla();
-
-            // Aquí puedes actualizar la interfaz gráfica si es necesario
-            // Por ejemplo, limpiar campos de texto, actualizar el ComboBox, etc.
-        } else {
-            JOptionPane.showMessageDialog(this, "Producto no encontrado");
+            if (productoAEliminar != null) {
+                // Eliminar el producto del TreeSet
+                MenuPrincipal.eliminarProducto(productoAEliminar);
+                JOptionPane.showMessageDialog(this, "Producto Eliminado");
+                limpiarPlanilla();
+            } else {
+                JOptionPane.showMessageDialog(this, "Producto no encontrado");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "NO hay ningún producto seleccionado");
         }
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "NO hay ningun producto selecionado");
-    }
 
     }//GEN-LAST:event_jbEliminarActionPerformed
 
     private void jbBuscarporCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarporCodigoActionPerformed
         // TODO add your handling code here:
-          int codigoBuscado = Integer.parseInt(jtCodigo.getText());
+          
+        try {
+            int codigoBuscado = Integer.parseInt(jtCodigo.getText());
 
-    Producto productoEncontrado = buscarProductoPorCodigo(codigoBuscado); // Método para buscar en el TreeSet
+            Producto productoEncontrado = buscarProductoPorCodigo(codigoBuscado);
 
-    if (productoEncontrado != null) {
-        jtCodigo.setText(Integer.toString(productoEncontrado.getCodigo()));
-        jtDescripcion.setText(productoEncontrado.getDescripcion());
-        jtPrecio.setText(Double.toString(productoEncontrado.getPrecio()));
-        jtStock.setText(Integer.toString(productoEncontrado.getStock()));
-        jcbRubro.setSelectedItem(productoEncontrado.getRubro());
-     
-// Aquí se busca el índice del rubro en el combo
-        int index = jcbRubro.getItemCount() - 1; // Inicializar con el último índice (no válido)
-        for (int i = 0; i < jcbRubro.getItemCount(); i++) {
-            if (jcbRubro.getItemAt(i).equals(productoEncontrado.getRubro().toString())) {
-                index = i;
-                break;
+            if (productoEncontrado != null) {
+                jtCodigo.setText(Integer.toString(productoEncontrado.getCodigo()));
+                jtDescripcion.setText(productoEncontrado.getDescripcion());
+                jtPrecio.setText(Double.toString(productoEncontrado.getPrecio()));
+                jtStock.setText(Integer.toString(productoEncontrado.getStock()));
+                jcbRubro.setSelectedItem(productoEncontrado.getRubro().toString());
+
+                int index = jcbRubro.getItemCount() - 1;
+                for (int i = 0; i < jcbRubro.getItemCount(); i++) {
+                    if (jcbRubro.getItemAt(i).equals(productoEncontrado.getRubro().toString())) {
+                        index = i;
+                        break;
+                    }
+                }
+                jcbRubro.setSelectedIndex(index);
+            } else {
+                JOptionPane.showMessageDialog(this, "Producto no encontrado");
             }
+        } catch (NumberFormatException ev) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar el código en números");
         }
-        
-        // Se establece el índice encontrado en el combo
-        jcbRubro.setSelectedIndex(index);
-    } else {
-        JOptionPane.showMessageDialog(this, "Producto no encontrado");
-    }
     }//GEN-LAST:event_jbBuscarporCodigoActionPerformed
 
     private void jbSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSalirActionPerformed
@@ -310,6 +312,8 @@ private void limpiarPlanilla(){
     jtStock.setText("");
     jcbRubro.setSelectedIndex(0);
 }
+
+
 
     
 

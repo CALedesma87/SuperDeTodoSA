@@ -1,16 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package superdetodosa;
 
+import java.util.TreeSet;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Usuario
- */
 public class BusquedaPorRubroView extends javax.swing.JInternalFrame {
 DefaultTableModel modelo = new DefaultTableModel(){
         
@@ -48,6 +41,13 @@ DefaultTableModel modelo = new DefaultTableModel(){
         jLabel1.setText("Listado de Productos por Rubro");
 
         jLabel2.setText("Elija rubro");
+
+        jcbRubro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija el Rubro..." }));
+        jcbRubro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbRubroActionPerformed(evt);
+            }
+        });
 
         jtProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -100,6 +100,26 @@ DefaultTableModel modelo = new DefaultTableModel(){
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jcbRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbRubroActionPerformed
+        // TODO add your handling code here:
+        // Limpiar la tabla antes de cargar nuevos datos
+    borrarFilas();
+
+    // Obtener el rubro seleccionado del JComboBox
+    String rubroSeleccionado = jcbRubro.getSelectedItem().toString();
+
+    // Obtener los productos del rubro seleccionado
+    TreeSet<Producto> productosRubro = obtenerProductosPorRubro(rubroSeleccionado);
+
+    // Llenar la tabla con los productos del rubro
+    for (Producto producto : productosRubro) {
+        Object[] fila = {producto.getCodigo(), producto.getDescripcion(), producto.getPrecio(), producto.getStock()};
+        modelo.addRow(fila);
+    }
+        
+        
+    }//GEN-LAST:event_jcbRubroActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -134,5 +154,17 @@ Categoria[] categorias = Categoria.values();
     for (Categoria categoria : categorias) {
         jcbRubro.addItem(categoria.toString());
     }
+}
+   
+   private TreeSet<Producto> obtenerProductosPorRubro(String rubro) {
+    TreeSet<Producto> productosRubro = new TreeSet<>();
+
+    for (Producto producto : MenuPrincipal.listaProductos) {
+        if (producto.getRubro().toString().equals(rubro)) {
+            productosRubro.add(producto);
+        }
+    }
+
+    return productosRubro;
 }
 }
